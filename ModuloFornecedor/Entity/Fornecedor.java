@@ -30,7 +30,7 @@ public class Fornecedor {
     }
 
     public Long getId() { return id; }
-     public String getNome() { return nome; }
+    public String getNome() { return nome; }
     public String getCnpj() { return cnpj; }
     public String getTelefone() { return telefone; }
     public String getEndereco() { return endereco; }

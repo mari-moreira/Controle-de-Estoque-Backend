@@ -1,0 +1,9 @@
+com\estoque\ModuloCliente\Entity\Cliente.class
+com\estoque\ModuloFornecedor\Repository\FornecedorRepository.class
+com\estoque\EstoqueApplication.class
+com\estoque\ModuloFornecedor\Service\FornecedorService.class
+com\estoque\ModuloCliente\Controller\ClienteController.class
+com\estoque\ModuloCliente\Service\ClienteService.class
+com\estoque\ModuloCliente\Repository\ClienteRepository.class
+com\estoque\ModuloFornecedor\Controller\FornecedorController.class
+com\estoque\ModuloFornecedor\Entity\Fornecedor.class

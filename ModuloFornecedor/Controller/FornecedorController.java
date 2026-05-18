@@ -1,7 +1,7 @@
 package ModuloFornecedor.Controller;
 
-import ModuloFornecedor.Service.FornecedorService;
 import ModuloFornecedor.Entity.Fornecedor;
+import ModuloFornecedor.Service.FornecedorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,34 +10,46 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/fornecedores")
+@CrossOrigin(origins = "*")
 public class FornecedorController {
 
     @Autowired
     private FornecedorService service;
 
+    // CADASTRAR
     @PostMapping
     public Fornecedor cadastrar(@RequestBody Fornecedor fornecedor) {
         return service.cadastrar(fornecedor);
     }
 
+    // LISTAR TODOS
     @GetMapping
     public List<Fornecedor> listar() {
         return service.listarTodos();
     }
 
-    @GetMapping("/{id}")
-    public Fornecedor buscar(@PathVariable Long id) {
-        return service.buscarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+    // BUSCAR
+    @GetMapping("/cnpj/{cnpj}")
+    public Fornecedor buscarPorCnpj(@PathVariable String cnpj) {
+
+        return service.buscarPorCnpj(cnpj)
+                .orElseThrow(() ->
+                        new RuntimeException("Fornecedor não encontrado"));
     }
 
-    @PutMapping("/{id}")
-    public Fornecedor atualizar(@PathVariable Long id, @RequestBody Fornecedor fornecedor) {
-        return service.atualizar(id, fornecedor);
+    // ATUALIZAR
+    @PutMapping("/cnpj/{cnpj}")
+    public Fornecedor atualizar(
+            @PathVariable String cnpj,
+            @RequestBody Fornecedor fornecedor) {
+
+        return service.atualizar(cnpj, fornecedor);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        service.deletar(id);
+    // EXCLUIR
+    @DeleteMapping("/cnpj/{cnpj}")
+    public void deletar(@PathVariable String cnpj) {
+
+        service.deletar(cnpj);
     }
 }

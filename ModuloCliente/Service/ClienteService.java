@@ -1,43 +1,57 @@
 package ModuloCliente.Service;
 
-import ModuloCliente.Entity.Cliente;
 import ModuloCliente.Repository.ClienteRepository;
-import java.util.List;
-import java.util.Optional;
+import ModuloCliente.Entity.Cliente;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ClienteService {
-   @Autowired
-   private ClienteRepository repository;
 
-   public ClienteService() {
-   }
+    @Autowired
+    private ClienteRepository repository;
 
-   public Cliente cadastrar(Cliente fornecedor) {
-      return (Cliente)this.repository.save(fornecedor);
-   }
+    // CADASTRAR
+    public Cliente cadastrar(Cliente cliente) {
+        return repository.save(cliente);
+    }
 
-   public List<Cliente> listarTodos() {
-      return this.repository.findAll();
-   }
+    // LISTAR TODOS
+    public List<Cliente> listarTodos() {
+        return repository.findAll();
+    }
 
-   public Optional<Cliente> buscarPorId(Long id) {
-      return this.repository.findById(id);
-   }
+    // BUSCAR
+    public Optional<Cliente> buscarPorCpf(String cpf) {
+        return repository.findByCpf(cpf);
+    }
 
-   public Cliente atualizar(Long id, Cliente dados) {
-      return (Cliente)this.repository.findById(id).map((f) -> {
-         f.setNome(dados.getNome());
-         f.setCnpj(dados.getCpf());
-         f.setTelefone(dados.getTelefone());
-         f.setEndereco(dados.getEndereco());
-         return (Cliente)this.repository.save(f);
-      }).orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
-   }
+    // ATUALIZAR
+    public Cliente atualizar(String cpf, Cliente dados) {
 
-   public void deletar(Long id) {
-      this.repository.deleteById(id);
-   }
+        return repository.findByCpf(cpf).map(c -> {
+
+            c.setNome(dados.getNome());
+            c.setTelefone(dados.getTelefone());
+            c.setEndereco(dados.getEndereco());
+
+            return repository.save(c);
+
+        }).orElseThrow(() ->
+                new RuntimeException("Cliente não encontrado"));
+    }
+
+    // EXCLUIR
+    public void deletar(String cpf) {
+
+        Cliente cliente = repository.findByCpf(cpf)
+                .orElseThrow(() ->
+                        new RuntimeException("Cliente não encontrado"));
+
+        repository.delete(cliente);
+    }
 }

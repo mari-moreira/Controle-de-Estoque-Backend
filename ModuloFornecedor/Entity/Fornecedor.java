@@ -20,7 +20,7 @@ public class Fornecedor {
     public Fornecedor() {}
 
     public Fornecedor(String nome, String cnpj, String telefone, String endereco, String cidade, String produtoFornecidoA, String produtoFornecidoB) {
-         this.nome = nome;
+        this.nome = nome;
         this.cnpj = cnpj;
         this.telefone = telefone;
         this.endereco = endereco;

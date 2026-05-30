@@ -2,7 +2,8 @@ package com.distribuidora.ModuloPedido.service;
 
 import com.distribuidora.ModuloCliente.entity.Cliente;
 import com.distribuidora.ModuloCliente.repository.ClienteRepository;
-
+import com.distribuidora.ModuloEstoque.entity.Estoque;
+import com.distribuidora.ModuloEstoque.repository.EstoqueRepository;
 import com.distribuidora.ModuloProduto.entity.Produto;
 import com.distribuidora.ModuloProduto.repository.ProdutoRepository;
 
@@ -27,6 +28,9 @@ public class PedidoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private EstoqueRepository estoqueRepository;
+
     //CADASTRAR PEDIDO
     public Pedido cadastrar(PedidoDTO dto) {
 
@@ -35,6 +39,16 @@ public class PedidoService {
 
         // BUSCAR PRODUTO
         Produto produto = produtoRepository.findByCodigo(dto.getCodigoProduto()).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // BUSCAR ESTOQUE
+        Estoque estoque = estoqueRepository.findByProdutoCodigo(dto.getCodigoProduto()).orElseThrow(() -> new RuntimeException("Produto não cadastrado no estoque"));
+
+        if (estoque.getQuantidade() < dto.getQuantidade()) {
+            throw new RuntimeException("Quantidade insuficiente em estoque");
+        } else {
+            estoque.setQuantidade(estoque.getQuantidade() - dto.getQuantidade());
+            estoqueRepository.save(estoque);
+        }
 
         // CALCULAR VALOR
         Double valorTotal = produto.getPrecoBase() * dto.getQuantidade();
@@ -85,6 +99,11 @@ public class PedidoService {
     // EXCLUIR PEDIDO
     public void deletar(Long id) {
         Pedido pedido = buscarPorId(id);
+
+        Estoque estoque = estoqueRepository.findByProdutoCodigo(pedido.getProduto().getCodigo()).orElseThrow(() -> new RuntimeException("Estoque não encontrado"));
+        estoque.setQuantidade(estoque.getQuantidade() + pedido.getQuantidade());
+        estoqueRepository.save(estoque);
+        
         pedidoRepository.delete(pedido);
     }
 }
